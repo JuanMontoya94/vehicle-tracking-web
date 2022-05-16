@@ -9,27 +9,20 @@
         <Column field="status" header="Estado"></Column>
         <Column field="vehicle.plate" header="Placa"></Column>
       </DataTable>
+
     </Panel>
     <Dialog header="Crear Persona" :visible.sync="displayModal" :modal="true">
       <span class="p-float-label">
-        <InputText id="id" type="text" v-model="appointment.id" style="width: 100%" />
-        <label for="id">id</label>
+       <Dropdown v-model="selectedEmployee" :options="employees" optionLabel="name" placeholder="Codigo empleado" style="width: 80%"  />
       </span>
       <br />
-      <span class="p-float-label">
-        <InputText id="date" type="text" v-model="appointment.date" style="width: 100%" />
-        <label for="date">Apellido</label>
-      </span>
       <br />
       <span class="p-float-label">
-        <InputText id="status" type="text" v-model="appointment.status" style="width: 100%" />
-        <label for="status">Dirección</label>
+        <InputText id="plate" type="text" v-model="appointment.date" style="width: 100%" />
+        <label for="plate">Placa vehiculo</label>
       </span>
       <br />
-      <span class="p-float-label">
-        <InputText id="plate" type="text" v-model="appointment.vehicle.plate" style="width: 100%" />
-        <label for="plate">Teléfono</label>
-      </span>
+      
       <template #footer>
         <Button label="Guardar" icon="pi pi-check" @click="save" />
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
@@ -39,11 +32,17 @@
 </template>
 
 <script>
+
 import PersonaService from "../service/PersonaService";
 export default {
   name: "CrudApp",
   data() {
     return {
+      selectedEmployee:null,
+      employees:[
+        {name: '1', code: '1'}
+      ]
+      ,
       appointments: null,
       appointment: {
         id: null,
@@ -101,9 +100,7 @@ export default {
         if (data.status === 200) {
           this.displayModal = false;
           this.appointment = {
-            id: null,
-            date: null,
-            status: null,
+            employee: null,
             vehicle:{
               plate : null
             }

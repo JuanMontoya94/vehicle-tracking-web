@@ -7,6 +7,10 @@ import Menubar from 'primevue/menubar';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import AutoComplete from 'primevue/autocomplete';
+import Dropdown from 'primevue/dropdown';
+//import Calendar from 'primevue/calendar';
+
 
 import 'primevue/resources/themes/nova-light/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -20,6 +24,8 @@ Vue.component('Menubar', Menubar);
 Vue.component('Dialog', Dialog);
 Vue.component('InputText', InputText);
 Vue.component('Button', Button);
+Vue.component('Autocomplete', AutoComplete);
+Vue.component('Dropdown', Dropdown);
 
 new Vue({
   render: h => h(App),

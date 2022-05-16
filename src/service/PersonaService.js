@@ -10,6 +10,6 @@ export default class PersonaService {
     }
 
     save(persona) {
-        return axios.post(this.url + "save", persona)
+        return axios.post(this.url, persona)
     }
 }
