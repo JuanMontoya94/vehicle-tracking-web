@@ -1,19 +1,32 @@
 <template>
   <div id="app">
-    <CrudApp/>
+    <nav>
+      <router-link to="/">Citas</router-link> |
+      <router-link to="/customer">Clientes</router-link>
+    </nav>
+    <router-view/>
   </div>
 </template>
 
-<script>
-import CrudApp from './components/CrudApp.vue'
-
-export default {
-  name: 'App',
-  components: {
-    CrudApp
-  }
-}
-</script>
-
 <style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+nav {
+  padding: 30px;
+}
+
+nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
+}
 </style>
