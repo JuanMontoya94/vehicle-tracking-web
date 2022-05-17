@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default class PersonaService {
 
-    url = "http://localhost:8080/appointment";
+    url = "http://localhost:8080/appointment/";
     //url = "https://vehicle-tracking-uniquindio.herokuapp.com/appointment";
 
     getAll() {
@@ -13,5 +13,13 @@ export default class PersonaService {
     save(persona) {
         console.log(persona);
         return axios.post(this.url, persona)
+    }
+    update(persona) {
+        console.log(persona);
+        return axios.patch(this.url, persona)
+    }
+
+    delet(id){
+        return axios.delete(this.url +id)
     }
 }

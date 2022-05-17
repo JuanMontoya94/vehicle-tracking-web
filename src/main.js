@@ -9,6 +9,9 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import AutoComplete from 'primevue/autocomplete';
 import Dropdown from 'primevue/dropdown';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
+import swal from 'sweetalert2';
 //import Calendar from 'primevue/calendar';
 
 
@@ -17,6 +20,7 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
 Vue.config.productionTip = false
+
 Vue.component('DataTable', DataTable)
 Vue.component('Column', Column);
 Vue.component('Panel', Panel);
@@ -26,6 +30,10 @@ Vue.component('InputText', InputText);
 Vue.component('Button', Button);
 Vue.component('Autocomplete', AutoComplete);
 Vue.component('Dropdown', Dropdown);
+Vue.component('Toast', Toast);
+window.swal = swal
+
+Vue.use(ToastService);
 
 new Vue({
   render: h => h(App),

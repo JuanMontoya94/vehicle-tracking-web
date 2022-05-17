@@ -3,11 +3,17 @@
     <Panel header="Citas">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="appointments" :selection.sync="selectedAppointment" selectionMode="single" dataKey="" :paginator="true" :rows="10">
+      <DataTable :value="appointments" :paginator="true" :rows="10">
         <Column field="id" header="Codigo"></Column>
         <Column field="date" header="Fecha"></Column>
         <Column field="status" header="Estado"></Column>
         <Column field="vehicle.plate" header="Placa"></Column>
+        <Column field="Button" header="">
+        <template >
+          <Button label="" icon="pi pi-pencil" para class="p-button-warning"  @click="showUpdateModal" style="margin:15px"/>
+          <Button label="" icon="pi pi-trash" class="p-button-danger" @click="delet" style="margin:15px" />
+        </template>
+        </Column>
       </DataTable>
 
     </Panel>
@@ -31,7 +37,10 @@
     </Dialog>
 
     <Dialog header="Editar cita" :visible.sync="displayModalEditar" :modal="true">
-      
+      <span class="p-float-label">
+       <Dropdown v-model="appointment.employee" :options="employees" optionLabel="id" placeholder="Codigo empleado" style="width: 80%"  />
+      </span>
+      <br />
       <br />
       <span class="p-float-label">
         <InputText id="date" type="text" v-model="appointment.date" style="width: 100%" />
@@ -43,13 +52,9 @@
         <label for="status">Estado cita</label>
       </span>
       <br />
-      <span class="p-float-label">
-        <InputText id="plate" type="text" v-model="appointment.vehicle.plate" style="width: 100%" />
-        <label for="plate">Placa</label>
-      </span>
       
       <template #footer>
-        <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="update" />
+        <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="update"/>
 
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
@@ -58,7 +63,6 @@
     
   </div>
 </template>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.2/sweetalert2.all.js"></script>
 
 <script>
 
@@ -81,14 +85,6 @@ export default {
           plate : null
         }
       },
-      selectedAppointment:{
-        id:null,
-        status:null,
-        date:null,
-        vehicle:{
-          plate : null
-        }
-      },
       
       items: [
         {
@@ -96,27 +92,6 @@ export default {
           icon: "pi pi-fw pi-plus",
           command: () => {
             this.showSaveModal();
-          }
-        },
-        {
-          label: "Editar",
-          icon: "pi pi-fw pi-pencil",
-          command: () => {
-            this.showUpdateModal();
-          }
-        },
-        {
-          label: "Eliminar",
-          icon: "pi pi-fw pi-trash",
-          command: () => {
-            this.delet();
-          }
-        },
-        {
-          label: "Refrescar",
-          icon: "pi pi-fw pi-refresh",
-          command: () => {
-            this.getAll();
           }
         }
         
@@ -133,15 +108,16 @@ export default {
     this.getAll();
   },
   methods: {
-    
+    update(){
+
+    },
     showSaveModal() {
+     
+
       this.displayModalCrear = true;
     },
-    showSuccess() {
-            this.$toast.add({severity:'success', summary: 'Success Message', detail:'Message Content', life: 3000});
-        },
     showUpdateModal() {
-      this.appointment=this.selectedAppointment;
+
       this.displayModalEditar = true;
     },
     getAll() {
@@ -152,15 +128,8 @@ export default {
     save() {
       this.personaService.save(this.appointment).then(data => {
         console.log(data)
-        
          if (data.status === 200) {
-          swal.fire(
-             'Creado',
-             'La cita ha sido creada',
-             'success'
-           )
           this.displayModalCrear = false;
-          this.displayModalEditar = false;
           this.appointment = {
              employee: null,
              vehicle:{
@@ -168,59 +137,14 @@ export default {
             }
            };
            this.getAll();
-           
          }
       });
     },
-    update() {
-      this.personaService.update(this.appointment).then(data => {
-        console.log(data)
-         if (data.status === 200) {
-           swal.fire(
-             'Actualizado',
-             'La cita se ha actualizado',
-             'success'
-           )
-
-           this.showSuccess();
-          this.displayModalEditar = false;
-          this.appointment = {
-             employee: null,
-             vehicle:{
-               plate : null
-            },
-            status:null,
-            date:null,
-            id:null
-           };
-           this.getAll();
-         }
-      });
-    },
-    delet(){
-      if(confirm("¿Está seguro que desea eliminar la cita?")){
-      this.personaService.delet(this.selectedAppointment.id).then(data => {
-        if (data.status === 200){
-            swal.fire(
-             'Eliminado',
-             'La cita se ha eliminado',
-             'success'
-           )
-             this.getAll();
-             
-        }
-
-      });
-      }
-    },
-    
     closeModal() {
       this.displayModalCrear = false;
-      this.displayModalEditar = false;
     }
   }
 };
-
 </script>
 
 <style>
