@@ -8,16 +8,16 @@
         <Column field="date" header="Fecha"></Column>
         <Column field="status" header="Estado"></Column>
         <Column field="vehicle.plate" header="Placa"></Column>
-        <Column field="Button" header="Acción">
-        <template #body>
-      <Button type="button" label="Editar" class="p-button-raised p-button-primary" style="margin: 15px"  ></Button>
-      <Button type="button" label="Eliminar" class="p-button-raised p-button-secondary" style="margin: 15px" ></Button>
-    </template>
+        <Column field="Button" header="">
+        <template #body="slotProps">
+          <Button label="" icon="pi pi-pencil" para class="p-button-warning"  @click="showUpdateModal" style="margin:15px"/>
+          <Button label="" icon="pi pi-trash" class="p-button-danger" @click="delet" style="margin:15px" />
+        </template>
         </Column>
       </DataTable>
 
     </Panel>
-    <Dialog header="Crear Persona" :visible.sync="displayModal" :modal="true">
+    <Dialog header="Crear cita" :visible.sync="displayModalCrear" :modal="true">
       <span class="p-float-label">
        <Dropdown v-model="appointment.employee" :options="employees" optionLabel="id" placeholder="Codigo empleado" style="width: 80%"  />
       </span>
@@ -30,7 +30,32 @@
       <br />
       
       <template #footer>
-        <Button label="Guardar" icon="pi pi-check" @click="save" />
+        <Button label="Guardar" icon="pi pi-check" @click="save"/>
+
+        <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
+      </template>
+    </Dialog>
+
+    <Dialog header="Editar cita" :visible.sync="displayModalEditar" :modal="true">
+      <span class="p-float-label">
+       <Dropdown v-model="appointment.employee" :options="employees" optionLabel="id" placeholder="Codigo empleado" style="width: 80%"  />
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="date" type="text" v-model="appointment.date" style="width: 100%" />
+        <label for="date">Fecha</label>
+      </span>
+      <br />
+      <span class="p-float-label">
+        <InputText id="status" type="text" v-model="appointment.status" style="width: 100%" />
+        <label for="status">Estado cita</label>
+      </span>
+      <br />
+      
+      <template #footer>
+        <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="update"/>
+
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog>
@@ -47,7 +72,6 @@ export default {
   data() {
     return {
       selectedEmployee:null,
-      
       employees:[
         {id: '1'}
       ]
@@ -64,29 +88,16 @@ export default {
       
       items: [
         {
-          label: "Nuevo",
+          label: "Nueva cita",
           icon: "pi pi-fw pi-plus",
           command: () => {
             this.showSaveModal();
           }
-        },
-        {
-          label: "Editar",
-          icon: "pi pi-fw pi-pencil"
-        },
-        {
-          label: "Eliminar",
-          icon: "pi pi-fw pi-trash"
-        },
-        {
-          label: "Refrescar",
-          icon: "pi pi-fw pi-refresh",
-          command: () => {
-            this.getAll();
-          }
         }
+        
       ],
-      displayModal: false
+      displayModalCrear: false,
+      displayModalEditar:false
     };
   },
   personaService: null,
@@ -97,8 +108,17 @@ export default {
     this.getAll();
   },
   methods: {
+    update(){
+
+    },
     showSaveModal() {
-      this.displayModal = true;
+     
+
+      this.displayModalCrear = true;
+    },
+    showUpdateModal() {
+
+      this.displayModalEditar = true;
     },
     getAll() {
       this.personaService.getAll().then(data => {
@@ -109,7 +129,7 @@ export default {
       this.personaService.save(this.appointment).then(data => {
         console.log(data)
          if (data.status === 200) {
-          this.displayModal = false;
+          this.displayModalCrear = false;
           this.appointment = {
              employee: null,
              vehicle:{
@@ -121,7 +141,7 @@ export default {
       });
     },
     closeModal() {
-      this.displayModal = false;
+      this.displayModalCrear = false;
     }
   }
 };
