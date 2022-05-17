@@ -62,7 +62,7 @@
 
 <script>
 
-import PersonaService from "../service/PersonaService";
+import AppointmentService from "../service/AppointmentService";
 export default {
   name: "CrudApp",
   data() {
@@ -125,9 +125,9 @@ export default {
       displayModalEditar:false
     };
   },
-  personaService: null,
+  AppointmentService: null,
   created() {
-    this.personaService = new PersonaService();
+    this.AppointmentService = new AppointmentService();
   },
   mounted() {
     this.getAll();
@@ -145,12 +145,12 @@ export default {
       this.displayModalEditar = true;
     },
     getAll() {
-      this.personaService.getAll().then(data => {
+      this.AppointmentService.getAll().then(data => {
         this.appointments = data.data;
       });
     },
     save() {
-      this.personaService.save(this.appointment).then(data => {
+      this.AppointmentService.save(this.appointment).then(data => {
         console.log(data)
         
          if (data.status === 200) {
@@ -173,7 +173,7 @@ export default {
       });
     },
     update() {
-      this.personaService.update(this.appointment).then(data => {
+      this.AppointmentService.update(this.appointment).then(data => {
         console.log(data)
          if (data.status === 200) {
            swal.fire(
@@ -199,7 +199,7 @@ export default {
     },
     delet(){
       if(confirm("¿Está seguro que desea eliminar la cita?")){
-      this.personaService.delet(this.selectedAppointment.id).then(data => {
+      this.AppointmentService.delet(this.selectedAppointment.id).then(data => {
         if (data.status === 200){
             swal.fire(
              'Eliminado',
