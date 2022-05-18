@@ -3,7 +3,7 @@
     <Panel header="Citas">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="appointments" :selection.sync="selectedAppointment" selectionMode="single" dataKey="" :paginator="true" :rows="10">
+      <DataTable :value="appointments" :selection.sync="selectedAppointment" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
         <Column field="id" header="Codigo"></Column>
         <Column field="date" header="Fecha"></Column>
         <Column field="status" header="Estado"></Column>
@@ -146,6 +146,7 @@ export default {
     },
     getAll() {
       this.AppointmentService.getAll().then(data => {
+        console.log(data)
         this.appointments = data.data;
       });
     },

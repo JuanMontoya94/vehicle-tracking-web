@@ -3,7 +3,7 @@
     <Panel header="Clientes">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="" :paginator="true" :rows="10">
+      <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
         <Column field="id" header="Identificación"></Column>
         <Column field="email" header="Email"></Column>
         <Column field="name" header="Nombre"></Column>
@@ -11,15 +11,32 @@
       </DataTable>
 
     </Panel>
-    <Dialog header="Crear cita" :visible.sync="displayModalCrear" :modal="true">
+    <Dialog header="Agregar cliente" :visible.sync="displayModalCrear" :modal="true">
       
       <br />
       <span class="p-float-label">
         <InputText id="email" type="text" v-model="customer.email" style="width: 100%" />
-        <label for="email">Placa vehiculo</label>
+        <label for="email">Correo electronico</label>
       </span>
       <br />
-      
+      <br />
+      <span class="p-float-label">
+        <InputText id="name" type="text" v-model="customer.name" style="width: 100%" />
+        <label for="name">Nombre</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="phone" type="text" v-model="customer.phone" style="width: 100%" />
+        <label for="phone">Telefono</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <Button label="Agregar vehiculo" icon="pi pi-plus" @click="ShowVehicleModal"/>
+      </span>
+      <br />
+
       <template #footer>
         <Button label="Guardar" icon="pi pi-check" @click="save"/>
 
@@ -27,30 +44,78 @@
       </template>
     </Dialog>
 
-    <!-- <Dialog header="Editar cita" :visible.sync="displayModalEditar" :modal="true">
+     <!-- <Dialog header="Agregar Vehiculo al cliiente" :visible.sync="displayModalVehiculo" :modal="true">
       
-      <br />
-      <span class="p-float-label">
-        <InputText id="date" type="text" v-model="customer.date" style="width: 100%" />
-        <label for="date">Fecha</label>
-      </span>
-      <br />
-      <span class="p-float-label">
-        <InputText id="status" type="text" v-model="customer.status" style="width: 100%" />
-        <label for="status">Estado cita</label>
-      </span>
       <br />
       <span class="p-float-label">
         <InputText id="plate" type="text" v-model="customer.vehicle.plate" style="width: 100%" />
         <label for="plate">Placa</label>
       </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="vin" type="text" v-model="customer.vehicle.vin" style="width: 100%" />
+        <label for="vin">Numero de chasis</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="brand" type="text" v-model="customer.vehicle.brand" style="width: 100%" />
+        <label for="brand">Placa</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="model" type="text" v-model="customer.vehicle.model" style="width: 100%" />
+        <label for="model">Placa</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="year" type="text" v-model="customer.vehicle.year" style="width: 100%" />
+        <label for="year">Placa</label>
+      </span>
+      <br />
+      
+      <template #footer>
+        <Button label="Guardar" icon="pi pi-check" @click="closeModalVehicle"/>
+
+        <Button label="Cancelar" icon="pi pi-times" @click="cancelVehicleCreate" class="p-button-secondary" />
+      </template>
+    </Dialog> -->
+
+    <Dialog header="Actualizar cliente" :visible.sync="displayModalEditar" :modal="true">
+      
+       <br />
+      <span class="p-float-label">
+        <InputText id="email" type="text" v-model="customer.email" style="width: 100%" />
+        <label for="email">Correo electronico</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="name" type="text" v-model="customer.name" style="width: 100%" />
+        <label for="name">Nombre</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <InputText id="phone" type="text" v-model="customer.phone" style="width: 100%" />
+        <label for="phone">Telefono</label>
+      </span>
+      <br />
+      <br />
+      <span class="p-float-label">
+        <Button label="Agregar vehiculo" icon="pi pi-plus" @click="ShowVehicleModal"/>
+      </span>
+      <br />
       
       <template #footer>
         <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="update" />
 
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
-    </Dialog> -->
+    </Dialog> 
 
     
   </div>
@@ -71,12 +136,14 @@ export default {
         email:null,
         name:null,
         phone:null
+        
       },
       selectedCustomer:{
         id:null,
         email:null,
         name:null,
         phone:null
+        
       },
       
       items: [
@@ -111,7 +178,8 @@ export default {
         
       ],
       displayModalCrear: false,
-      displayModalEditar:false
+      displayModalEditar:false,
+      displayModalVehiculo:false
     };
   },
   CustomerService: null,
@@ -135,6 +203,7 @@ export default {
     },
     getAll() {
       this.CustomerService.getAll().then(data => {
+        console.log(data)
         this.customers = data.data;
       });
     },
@@ -144,8 +213,8 @@ export default {
         
          if (data.status === 200) {
           swal.fire(
-             'Creado',
-             'La cita ha sido creada',
+             'Exito',
+             'Cliente agregado con exito',
              'success'
            )
           this.displayModalCrear = false;
@@ -154,7 +223,14 @@ export default {
             id:null,
             email:null,
             name:null,
-            phone:null
+            phone:null,
+            vehicle:{
+              plate : null,
+              vin : null,
+              brand :null,
+              model : null,
+              year : null
+            }
            };
            this.getAll();
            
@@ -167,7 +243,7 @@ export default {
          if (data.status === 200) {
            swal.fire(
              'Actualizado',
-             'La cita se ha actualizado',
+             'Cliente actualizado con exito',
              'success'
            )
 
@@ -178,6 +254,7 @@ export default {
             email:null,
             name:null,
             phone:null
+            
            };
            this.getAll();
          }
@@ -199,10 +276,31 @@ export default {
       });
       }
     },
-    
+    ShowVehicleModal(){
+      
+      this.displayModalCrear = false;
+      this.displayModalVehiculo = true;
+    },
+    closeModalVehicle() {
+      this.displayModalVehiculo = false;
+      this.displayModalCrear = true;
+    },
     closeModal() {
       this.displayModalCrear = false;
       this.displayModalEditar = false;
+    },
+    cancelVehicleCreate(){
+      this.customer= {
+        
+        vehicle:{
+              plate : null,
+              vin : null,
+              brand :null,
+              model : null,
+              year : null
+            }
+      }
+      closeModalVehicle();
     }
   }
 };
