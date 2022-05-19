@@ -3,16 +3,49 @@
     <Panel header="Clientes">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
+      <!-- <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
         <Column field="id" header="Identificación"></Column>
         <Column field="email" header="Email"></Column>
         <Column field="name" header="Nombre"></Column>
         <Column field="phone" header="Telefono"></Column>
        
-      </DataTable>
+      </DataTable>  -->
+      <div class="card card-info">
+      <div class="card-body table-responsive">
+      <table class="table table-hover table-head-fixed text-nowrap projects">
+        <thead>
+          <tr>
+            <th>Identificación</th>
+            <th>Correo</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Vehiculo</th>
 
-    </Panel>
-    <Dialog header="Agregar cliente" :visible.sync="displayModalCrear" :modal="true">
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,id) in customers" :key="id">
+            <td v-text="item.id"></td>
+            <td v-text="item.email"></td>
+            <td v-text="item.name"></td>
+            <td v-text="item.phone"></td>
+            <td> 
+              <span v-for="(vehicle,id) in item.vehicles" :key="id">{{vehicle.plate}} </span>
+            </td>
+            <td> <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="update" /></td>
+           
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    </Panel> 
+
+    
+   
+    <!--<Dialog header="Agregar cliente" :visible.sync="displayModalCrear" :modal="true">
       
       <br />
       <span class="p-float-label">
@@ -45,7 +78,7 @@
       </template>
     </Dialog>
 
-     <!-- <Dialog header="Agregar Vehiculo al cliiente" :visible.sync="displayModalVehiculo" :modal="true">
+      <Dialog header="Agregar Vehiculo al cliiente" :visible.sync="displayModalVehiculo" :modal="true">
       
       <br />
       <span class="p-float-label">
@@ -83,7 +116,7 @@
 
         <Button label="Cancelar" icon="pi pi-times" @click="cancelVehicleCreate" class="p-button-secondary" />
       </template>
-    </Dialog> -->
+    </Dialog> 
 
     <Dialog header="Actualizar cliente" :visible.sync="displayModalEditar" :modal="true">
       
@@ -117,9 +150,13 @@
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog> 
+    -->
 
     
+    
   </div>
+  
+  
 </template>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.2/sweetalert2.all.js"></script>
 

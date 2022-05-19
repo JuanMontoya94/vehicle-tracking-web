@@ -2,7 +2,8 @@
   <div id="app">
     <nav>
       <router-link to="/">Citas</router-link> |
-      <router-link to="/customer">Clientes</router-link>
+      <router-link to="/customer">Clientes</router-link>|
+      <router-link to="/customerTest">Clientes</router-link>
     </nav>
     <router-view/>
   </div>

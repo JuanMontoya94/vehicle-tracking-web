@@ -12,6 +12,8 @@ import Dropdown from 'primevue/dropdown';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import swal from 'sweetalert2';
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 //import Calendar from 'primevue/calendar';
 
 
