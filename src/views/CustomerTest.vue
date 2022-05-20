@@ -32,7 +32,7 @@
             <td> 
               <span v-for="(vehicle,id) in item.vehicles" :key="id">{{vehicle.plate}} </span>
             </td>
-            <td> <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="update" /></td>
+            <td> <Button label="Editar" class="p-button-warning" icon="pi pi-check" @click="showUpdate(item)" /></td>
            
 
           </tr>
@@ -116,25 +116,25 @@
 
         <Button label="Cancelar" icon="pi pi-times" @click="cancelVehicleCreate" class="p-button-secondary" />
       </template>
-    </Dialog> 
+    </Dialog> -->
 
     <Dialog header="Actualizar cliente" :visible.sync="displayModalEditar" :modal="true">
       
        <br />
       <span class="p-float-label">
-        <InputText id="email" type="text" v-model="customer.email" style="width: 100%" />
+        <InputText id="email" type="text" v-model="selectedCustomer.email" style="width: 100%" />
         <label for="email">Correo electronico</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="name" type="text" v-model="customer.name" style="width: 100%" />
+        <InputText id="name" type="text" v-model="selectedCustomer.name" style="width: 100%" />
         <label for="name">Nombre</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="phone" type="text" v-model="customer.phone" style="width: 100%" />
+        <InputText id="phone" type="text" v-model="selectedCustomer.phone" style="width: 100%" />
         <label for="phone">Telefono</label>
       </span>
       <br />
@@ -150,7 +150,7 @@
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog> 
-    -->
+    
 
     
     
@@ -241,7 +241,7 @@ export default {
     },
     getAll() {
       this.CustomerService.getAll().then(data => {
-        console.log(data)
+      
         this.customers = data.data;
       });
     },
@@ -313,6 +313,10 @@ export default {
 
       });
       }
+    },
+    showUpdate(item){
+      this.selectedCustomer=item;
+      this.showUpdateModal();
     },
     ShowVehicleModal(){
       
