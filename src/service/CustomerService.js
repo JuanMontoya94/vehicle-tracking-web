@@ -3,8 +3,8 @@ import axios from 'axios';
 
 export default class CustomerService {
 
-   // url = "https://vehicle-tracking-uniquindio.herokuapp.com/customer/";
-    url = "http://192.168.1.3:8080/customer/";
+    url = "https://vehicle-tracking-uniquindio.herokuapp.com/customer/";
+    //url = "http://192.168.1.3:8080/customer/";
     getAll() {
         return axios.get(this.url);
     }
@@ -14,7 +14,8 @@ export default class CustomerService {
         return axios.post(this.url, customer)
     }
     update(customer) {
-        
+        console.log(customer);
+
         return axios.patch(this.url, customer)
     }
 

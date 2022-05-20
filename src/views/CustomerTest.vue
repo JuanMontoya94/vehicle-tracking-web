@@ -173,17 +173,25 @@ export default {
         id:null,
         email:null,
         name:null,
-        phone:null
+        phone:null,
+        vehicles:[]
         
       },
       selectedCustomer:{
         id:null,
         email:null,
         name:null,
-        phone:null
+        phone:null,
+        vehicles:[]
         
       },
-      
+      selectedCustomerItem:{
+        id:null,
+        email:null,
+        name:null,
+        phone:null,
+        vehicles:[]
+      },
       items: [
         {
           label: "Nueva cita",
@@ -232,13 +240,7 @@ export default {
     showSaveModal() {
       this.displayModalCrear = true;
     },
-    showSuccess() {
-            this.$toast.add({severity:'success', summary: 'Success Message', detail:'Message Content', life: 3000});
-        },
-    showUpdateModal() {
-      this.customer=this.selectedCustomer;
-      this.displayModalEditar = true;
-    },
+    
     getAll() {
       this.CustomerService.getAll().then(data => {
       
@@ -275,7 +277,25 @@ export default {
          }
       });
     },
+    showUpdateModal() {
+      
+      this.displayModalEditar = true;
+    },
+    showUpdate(item){
+      this.costumer=this.selectedCustomer;
+      this.selectedCustomer=item;
+      this.selectedCustomerItem=this.selectedCustomer;
+
+      this.showUpdateModal();
+    },
     update() {
+      this.customer=this.selectedCustomer;
+      if(this.selectedCustomer.name===this.selectedCustomerItem.name) {this.customer.name=null;}
+      if(this.selectedCustomer.email===this.selectedCustomerItem.email) {this.customer.email=null;}
+      if(this.selectedCustomer.phone===this.selectedCustomerItem.phone) {this.customer.phone=null;}
+      if(this.selectedCustomer.vehicles===this.selectedCustomerItem.vehicles) {this.customer.vehicles=[];}
+      console.log(this.selectedCustomerItem);
+      
       this.CustomerService.update(this.customer).then(data => {
         console.log(data)
          if (data.status === 200) {
@@ -285,7 +305,6 @@ export default {
              'success'
            )
 
-           this.showSuccess();
           this.displayModalEditar = false;
           this.customer = {
              id:null,
@@ -314,10 +333,7 @@ export default {
       });
       }
     },
-    showUpdate(item){
-      this.selectedCustomer=item;
-      this.showUpdateModal();
-    },
+    
     ShowVehicleModal(){
       
       this.displayModalCrear = false;
