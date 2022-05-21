@@ -3,12 +3,41 @@
     <Panel header="Citas">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="appointments" :selection.sync="selectedAppointment" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
-        <Column field="id" header="Codigo"></Column>
-        <Column field="date" header="Fecha"></Column>
-        <Column field="status" header="Estado"></Column>
-        <Column field="vehicle.plate" header="Placa"></Column>
-      </DataTable>
+
+      <div class="card card-info">
+      <div class="card-body table-responsive">
+      <table class="table table-hover table-head-fixed text-nowrap projects table table-bordered">
+        <thead>
+          <tr>
+            <th>Codigo</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Placa</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,id) in appointments" :key="id">
+            <td v-text="item.id"></td>
+            <td v-text="item.date"></td>
+            <td v-text="item.status"></td>
+            <td v-text="item.vehicle.plate"></td>
+            <td>
+              <Button class="p-button-warning" icon="pi pi-check" @click="showUpdate(item)" />
+              <Button class="p-button-danger" icon="pi pi-trash" @click="showDelete(item)" />
+              <Button class="p-button-success" icon="pi pi-arrow-right" @click="entrysave(item.id)" />
+            </td>
+           
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    
+    <br />
+
+     
 
     </Panel>
     <Dialog header="Crear cita" :visible.sync="displayModalCrear" :modal="true">
@@ -55,6 +84,22 @@
       </template>
     </Dialog>
 
+    <Dialog header="Registrar ingreso" :visible.sync="displayModalEntry" :modal="true">
+      
+      <br />
+      <span class="p-float-label">
+        <InputText id="km" type="text" v-model="selectedKm" style="width: 100%" />
+        <label for="km">Kilometraje</label>
+      </span>
+      
+      
+      <template #footer>
+        <Button label="Ingresar" icon="pi pi-check" @click="saveEntry" />
+
+        <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
+      </template>
+    </Dialog>
+
     
   </div>
 </template>
@@ -63,6 +108,7 @@
 <script>
 
 import AppointmentService from "../service/AppointmentService";
+import EntryService from "../service/EntryService";
 export default {
   name: "CrudApp",
   data() {
@@ -80,6 +126,11 @@ export default {
         vehicle:{
           plate : null
         }
+      },
+      selectedKm:null,
+      entry:{
+          km:null,
+          idAppointment:null
       },
       selectedAppointment:{
         id:null,
@@ -99,20 +150,6 @@ export default {
           }
         },
         {
-          label: "Editar",
-          icon: "pi pi-fw pi-pencil",
-          command: () => {
-            this.showUpdateModal();
-          }
-        },
-        {
-          label: "Eliminar",
-          icon: "pi pi-fw pi-trash",
-          command: () => {
-            this.delet();
-          }
-        },
-        {
           label: "Refrescar",
           icon: "pi pi-fw pi-refresh",
           command: () => {
@@ -122,24 +159,46 @@ export default {
         
       ],
       displayModalCrear: false,
-      displayModalEditar:false
+      displayModalEditar:false,
+      displayModalEntry:false
     };
   },
   AppointmentService: null,
+  EntryService:null,
   created() {
     this.AppointmentService = new AppointmentService();
+    this.EntryService = new EntryService();
   },
   mounted() {
     this.getAll();
   },
   methods: {
-    
+    entrysave(id){
+      this.entry.idAppointment=id;
+      this.showEntryModal();
+    },
+    showUpdate(item){
+      this.appointment=this.selectedAppointment;
+      this.selectedAppointment=item;
+
+      this.showUpdateModal();
+    },
+    showDelete(item){
+      this.appointment=this.selectedAppointment;
+      this.selectedAppointment=item;
+
+      this.delet();
+    },
     showSaveModal() {
       this.displayModalCrear = true;
     },
     showSuccess() {
             this.$toast.add({severity:'success', summary: 'Success Message', detail:'Message Content', life: 3000});
         },
+    showEntryModal(){
+      this.entry.km=this.selectedKm;
+      this.displayModalEntry=true;
+    },
     showUpdateModal() {
       this.appointment=this.selectedAppointment;
       this.displayModalEditar = true;
@@ -149,6 +208,20 @@ export default {
         console.log(data)
         this.appointments = data.data;
       });
+    },
+    saveEntry(){
+      this.EntryService.save(this.entry).then(data => {
+          if (data.status === 200) {
+          swal.fire(
+             'Creado',
+             'Se registr´el ingreso',
+             'success'
+           )}
+           this.displayModalEntry=false;
+           this.entry=null;
+      
+      });
+      
     },
     save() {
       this.AppointmentService.save(this.appointment).then(data => {
@@ -218,6 +291,7 @@ export default {
     closeModal() {
       this.displayModalCrear = false;
       this.displayModalEditar = false;
+      this.displayModalEntry = false;
     }
   }
 };

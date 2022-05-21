@@ -3,13 +3,6 @@
     <Panel header="Clientes">
       <Menubar :model="items" />
       <br />
-      <!-- <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
-        <Column field="id" header="Identificación"></Column>
-        <Column field="email" header="Email"></Column>
-        <Column field="name" header="Nombre"></Column>
-        <Column field="phone" header="Telefono"></Column>
-       
-      </DataTable>  -->
       <div class="card card-info">
       <div class="card-body table-responsive">
       <table class="table table-hover table-head-fixed text-nowrap projects table table-bordered">
