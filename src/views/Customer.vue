@@ -3,15 +3,51 @@
     <Panel header="Clientes">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
+      <!-- <DataTable :value="customers" :selection.sync="selectedCustomer" selectionMode="single" dataKey="id" :paginator="true" :rows="10">
         <Column field="id" header="Identificación"></Column>
         <Column field="email" header="Email"></Column>
         <Column field="name" header="Nombre"></Column>
         <Column field="phone" header="Telefono"></Column>
        
-      </DataTable>
+      </DataTable>  -->
+      <div class="card card-info">
+      <div class="card-body table-responsive">
+      <table class="table table-hover table-head-fixed text-nowrap projects table table-bordered">
+        <thead>
+          <tr>
+            <th>Identificación</th>
+            <th>Correo</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Vehiculo</th>
 
-    </Panel>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,id) in customers" :key="id">
+            <td v-text="item.id"></td>
+            <td v-text="item.email"></td>
+            <td v-text="item.name"></td>
+            <td v-text="item.phone"></td>
+            <td> 
+              <span v-for="(vehicle,id) in item.vehicles" :key="id">{{vehicle.plate}} </span>
+            </td>
+            <td>
+              <Button class="p-button-warning" icon="pi pi-check" @click="showUpdate(item)" />
+              <Button class="p-button-danger" icon="pi pi-trash" @click="showDelete(item)" />
+            </td>
+           
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    </Panel> 
+
+    
+   
     <Dialog header="Agregar cliente" :visible.sync="displayModalCrear" :modal="true">
       
       <br />
@@ -44,8 +80,8 @@
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog>
-
-     <!-- <Dialog header="Agregar Vehiculo al cliiente" :visible.sync="displayModalVehiculo" :modal="true">
+<!-- 
+      <Dialog header="Agregar Vehiculo al cliiente" :visible.sync="displayModalVehiculo" :modal="true">
       
       <br />
       <span class="p-float-label">
@@ -83,25 +119,25 @@
 
         <Button label="Cancelar" icon="pi pi-times" @click="cancelVehicleCreate" class="p-button-secondary" />
       </template>
-    </Dialog> -->
+    </Dialog>  -->
 
     <Dialog header="Actualizar cliente" :visible.sync="displayModalEditar" :modal="true">
       
        <br />
       <span class="p-float-label">
-        <InputText id="email" type="text" v-model="customer.email" style="width: 100%" />
+        <InputText id="email" type="text" v-model="selectedCustomer.email" style="width: 100%" />
         <label for="email">Correo electronico</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="name" type="text" v-model="customer.name" style="width: 100%" />
+        <InputText id="name" type="text" v-model="selectedCustomer.name" style="width: 100%" />
         <label for="name">Nombre</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="phone" type="text" v-model="customer.phone" style="width: 100%" />
+        <InputText id="phone" type="text" v-model="selectedCustomer.phone" style="width: 100%" />
         <label for="phone">Telefono</label>
       </span>
       <br />
@@ -117,9 +153,13 @@
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog> 
+    
 
     
+    
   </div>
+  
+  
 </template>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.2/sweetalert2.all.js"></script>
 
@@ -136,37 +176,31 @@ export default {
         id:null,
         email:null,
         name:null,
-        phone:null
+        phone:null,
+        vehicles:[]
         
       },
       selectedCustomer:{
         id:null,
         email:null,
         name:null,
-        phone:null
+        phone:null,
+        vehicles:[]
         
       },
-      
+      selectedCustomerItem:{
+        id:null,
+        email:null,
+        name:null,
+        phone:null,
+        vehicles:[]
+      },
       items: [
         {
-          label: "Nueva cita",
+          label: "Nuevo cliente",
           icon: "pi pi-fw pi-plus",
           command: () => {
             this.showSaveModal();
-          }
-        },
-        {
-          label: "Editar",
-          icon: "pi pi-fw pi-pencil",
-          command: () => {
-            this.showUpdateModal();
-          }
-        },
-        {
-          label: "Eliminar",
-          icon: "pi pi-fw pi-trash",
-          command: () => {
-            this.delet();
           }
         },
         {
@@ -195,16 +229,10 @@ export default {
     showSaveModal() {
       this.displayModalCrear = true;
     },
-    showSuccess() {
-            this.$toast.add({severity:'success', summary: 'Success Message', detail:'Message Content', life: 3000});
-        },
-    showUpdateModal() {
-      this.customer=this.selectedCustomer;
-      this.displayModalEditar = true;
-    },
+    
     getAll() {
       this.CustomerService.getAll().then(data => {
-        console.log(data)
+      
         this.customers = data.data;
       });
     },
@@ -238,7 +266,27 @@ export default {
          }
       });
     },
+    showUpdateModal() {
+     this.customer=this.selectedCustomer;
+     this.displayModalEditar = true;
+    },
+    showUpdate(item){
+      this.costumer=this.selectedCustomer;
+      this.selectedCustomer=item;
+
+      this.showUpdateModal();
+    },
+    showDelete(item){
+      this.costumer=this.selectedCustomer;
+      this.selectedCustomer=item;
+
+      this.delet();
+    },
     update() {
+     
+      this.customer.vehicles=[];
+      console.log(this.selectedCustomerItem);
+      
       this.CustomerService.update(this.customer).then(data => {
         console.log(data)
          if (data.status === 200) {
@@ -248,7 +296,6 @@ export default {
              'success'
            )
 
-           this.showSuccess();
           this.displayModalEditar = false;
           this.customer = {
              id:null,
@@ -277,6 +324,7 @@ export default {
       });
       }
     },
+    
     ShowVehicleModal(){
       
       this.displayModalCrear = false;
