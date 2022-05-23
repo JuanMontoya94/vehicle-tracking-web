@@ -9,10 +9,11 @@
       <table class="table table-hover table-head-fixed text-nowrap projects table table-bordered">
         <thead>
           <tr>
-            <th>Codigo</th>
+            <th>Código</th>
             <th>Fecha</th>
             <th>Estado</th>
             <th>Placa</th>
+            <th>Acciones</th>
 
           </tr>
         </thead>
@@ -23,9 +24,9 @@
             <td v-text="item.status"></td>
             <td v-text="item.vehicle.plate"></td>
             <td>
-              <Button class="p-button-warning" icon="pi pi-check" @click="showUpdate(item)" />
-              <Button class="p-button-danger" icon="pi pi-trash" @click="showDelete(item)" />
-              <Button class="p-button-success" icon="pi pi-arrow-right" @click="entrysave(item.id)" />
+              <Button class="p-button-warning" icon="pi pi-pencil" @click="showUpdate(item)" style="margin-right:5px"/>
+              <Button class="p-button-danger" icon="pi pi-trash" @click="showDelete(item)" style="margin-right:5px"/>
+              <Button class="p-button-success" icon="pi pi-arrow-right" @click="entrysave(item)" />
             </td>
            
 
@@ -109,7 +110,7 @@
 import AppointmentService from "../service/AppointmentService";
 import EntryService from "../service/EntryService";
 export default {
-  name: "CrudApp",
+  name: "Appointment",
   data() {
     return {
       selectedEmployee:null,
@@ -175,8 +176,10 @@ export default {
     this.getAll();
   },
   methods: {
-    entrysave(id){
-      this.entry.appointment.id = id;
+    entrysave(item){
+      this.appointment=item;
+      this.entry.appointment.id = item.id;
+      
 
       this.showEntryModal();
     },
@@ -252,6 +255,12 @@ export default {
            };
            this.getAll();
            
+         }else{
+           swal.fire(
+             'Cuidado',
+             'la placa no existe',
+             'warning'
+           )
          }
       });
     },

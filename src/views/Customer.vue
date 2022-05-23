@@ -13,6 +13,7 @@
             <th>Nombre</th>
             <th>Telefono</th>
             <th>Vehiculo</th>
+            <th>Acciones</th>
 
           </tr>
         </thead>
@@ -26,7 +27,7 @@
               <span v-for="(vehicle,id) in item.vehicles" :key="id">{{vehicle.plate}} </span>
             </td>
             <td>
-              <Button class="p-button-warning" icon="pi pi-check" @click="showUpdate(item)" />
+              <Button class="p-button-warning mr-2" icon="pi pi-pencil" @click="showUpdate(item)" style="margin-right:5px" />
               <Button class="p-button-danger" icon="pi pi-trash" @click="showDelete(item)" />
             </td>
            
@@ -73,37 +74,37 @@
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog>
-<!-- 
+
       <Dialog header="Agregar Vehiculo al cliiente" :visible.sync="displayModalVehiculo" :modal="true">
       
       <br />
       <span class="p-float-label">
-        <InputText id="plate" type="text" v-model="customer.vehicle.plate" style="width: 100%" />
+        <InputText id="plate" type="text" v-model="vehicles.plate" style="width: 100%" />
         <label for="plate">Placa</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="vin" type="text" v-model="customer.vehicle.vin" style="width: 100%" />
+        <InputText id="vin" type="text" v-model="vehicles.vin" style="width: 100%" />
         <label for="vin">Numero de chasis</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="brand" type="text" v-model="customer.vehicle.brand" style="width: 100%" />
-        <label for="brand">Placa</label>
+        <InputText id="brand" type="text" v-model="vehicles.brand" style="width: 100%" />
+        <label for="brand">Marca</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="model" type="text" v-model="customer.vehicle.model" style="width: 100%" />
-        <label for="model">Placa</label>
+        <InputText id="model" type="text" v-model="vehicles.model" style="width: 100%" />
+        <label for="model">Modelo</label>
       </span>
       <br />
       <br />
       <span class="p-float-label">
-        <InputText id="year" type="text" v-model="customer.vehicle.year" style="width: 100%" />
-        <label for="year">Placa</label>
+        <InputText id="year" type="text" v-model="vehicles.year" style="width: 100%" />
+        <label for="year">Año</label>
       </span>
       <br />
       
@@ -112,7 +113,7 @@
 
         <Button label="Cancelar" icon="pi pi-times" @click="cancelVehicleCreate" class="p-button-secondary" />
       </template>
-    </Dialog>  -->
+    </Dialog> 
 
     <Dialog header="Actualizar cliente" :visible.sync="displayModalEditar" :modal="true">
       
@@ -165,6 +166,16 @@ export default {
     return {
      
       customers: null,
+
+      vehicles:{
+        plate : null,
+        vin:null,
+        brand: null,
+        model: null,
+        year:null
+      }
+      
+      ,
       customer: {
         id:null,
         email:null,
@@ -290,12 +301,18 @@ export default {
            )
 
           this.displayModalEditar = false;
-          this.customer = {
-             id:null,
+         this.customer = {
+            id:null,
             email:null,
             name:null,
-            phone:null
-            
+            phone:null,
+            vehicle:{
+              plate : null,
+              vin : null,
+              brand :null,
+              model : null,
+              year : null
+            }
            };
            this.getAll();
          }
@@ -320,16 +337,30 @@ export default {
     
     ShowVehicleModal(){
       
-      this.displayModalCrear = false;
+      //this.displayModalCrear = false;
       this.displayModalVehiculo = true;
     },
     closeModalVehicle() {
+      this.customer.vehicles.push(this.vehicles);
       this.displayModalVehiculo = false;
-      this.displayModalCrear = true;
+
     },
     closeModal() {
       this.displayModalCrear = false;
       this.displayModalEditar = false;
+      this.customer = {
+            id:null,
+            email:null,
+            name:null,
+            phone:null,
+            vehicle:{
+              plate : null,
+              vin : null,
+              brand :null,
+              model : null,
+              year : null
+            }
+           };
     },
     cancelVehicleCreate(){
       this.customer= {

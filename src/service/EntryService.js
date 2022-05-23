@@ -3,8 +3,8 @@ import axios from 'axios';
 
 export default class EntryService {
 
-    //url = "https://vehicle-tracking-uniquindio.herokuapp.com/entry/";
-    url = "http://localhost:8080/entry/";
+    url = "https://vehicle-tracking-uniquindio.herokuapp.com/entry/";
+    
 
     getAll() {
         return axios.get(this.url);

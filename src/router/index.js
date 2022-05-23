@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import CrudApp from '../views/CrudApp.vue'
+import Appointment from '../views/Appointment.vue'
 
 Vue.use(VueRouter)
 
@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/',
     name: 'Appointment',
-    component: CrudApp
+    component: Appointment
   },
   {
     path: '/customer',
