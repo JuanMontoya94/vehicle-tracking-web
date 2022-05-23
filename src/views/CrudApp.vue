@@ -88,10 +88,9 @@
       
       <br />
       <span class="p-float-label">
-        <InputText id="km" type="text" v-model="selectedKm" style="width: 100%" />
+        <InputText id="km" type="number" v-model="selectedKm" style="width: 100%" />
         <label for="km">Kilometraje</label>
       </span>
-      
       
       <template #footer>
         <Button label="Ingresar" icon="pi pi-check" @click="saveEntry" />
@@ -120,6 +119,7 @@ export default {
       ,
       appointments: null,
       appointment: {
+        id:null,
         employee:{
           id:null
         },
@@ -130,7 +130,9 @@ export default {
       selectedKm:null,
       entry:{
           km:null,
-          idAppointment:null
+          appointment:{
+            id:null
+          }
       },
       selectedAppointment:{
         id:null,
@@ -174,7 +176,8 @@ export default {
   },
   methods: {
     entrysave(id){
-      this.entry.idAppointment=id;
+      this.entry.appointment.id = id;
+
       this.showEntryModal();
     },
     showUpdate(item){
@@ -196,8 +199,7 @@ export default {
             this.$toast.add({severity:'success', summary: 'Success Message', detail:'Message Content', life: 3000});
         },
     showEntryModal(){
-      this.entry.km=this.selectedKm;
-      this.displayModalEntry=true;
+      this.displayModalEntry = true;
     },
     showUpdateModal() {
       this.appointment=this.selectedAppointment;
@@ -210,15 +212,22 @@ export default {
       });
     },
     saveEntry(){
+      this.entry.km=this.selectedKm;
+      this.entry.km=parseInt(this.entry.km);
       this.EntryService.save(this.entry).then(data => {
           if (data.status === 200) {
+          
           swal.fire(
              'Creado',
-             'Se registr´el ingreso',
+             'Se registró el ingreso',
              'success'
-           )}
-           this.displayModalEntry=false;
+             
+           )
+           this.updateStatusAppointment(this.entry.appointment.id);
+           this.displayModalEntry = false;
            this.entry=null;
+           }
+           
       
       });
       
@@ -256,8 +265,27 @@ export default {
              'success'
            )
 
-           this.showSuccess();
           this.displayModalEditar = false;
+          this.appointment = {
+             employee: null,
+             vehicle:{
+               plate : null
+            },
+            status:null,
+            date:null,
+            id:null
+           };
+           this.getAll();
+         }
+      });
+    },
+    updateStatusAppointment(id) {
+      this.appointment.id=id;
+      this.appointment.status="En proceso";
+      this.AppointmentService.update(this.appointment).then(data => {
+        console.log(data)
+         if (data.status === 200) {
+           
           this.appointment = {
              employee: null,
              vehicle:{

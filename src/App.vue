@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">SSEV</a>
+          <a class="navbar-brand" href="/">SSEV</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -13,6 +13,9 @@
               </li>
               <li class="nav-item">
                <a class="nav-link active" aria-current="page"  href="/customer">Clientes</a>
+              </li>
+              <li class="nav-item">
+               <a class="nav-link active" aria-current="page"  href="/entry">Ingresos</a>
               </li>
             </ul>
           </div>
