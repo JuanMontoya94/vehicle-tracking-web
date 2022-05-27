@@ -22,14 +22,10 @@
             <td v-text="item.km"></td>
             <td v-text="item.appointment.vehicle.plate"></td>
             
-           
-
           </tr>
         </tbody>
       </table>
     </div>
-    </div>
-
     </Panel> 
     
   </div>
